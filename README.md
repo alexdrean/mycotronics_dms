@@ -6,7 +6,7 @@ apt install platformio
 ```
 clone this repo and cd
 ```bash
-platformio run
+platformio run --target upload
 ```
 ```gcode
 $5=0
