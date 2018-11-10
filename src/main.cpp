@@ -51,10 +51,10 @@ void loop() {
   float temperature = getTemperature();
   Serial.print("temp=");
   Serial.println(temperature);
-  long interval = Firebase.getInt("settings/adrean/1/secondaryInterval");
+  long interval = Firebase.getInt("settings/secondaryInterval");
   Serial.print("interval=");
   Serial.println(interval);
-  float cutoff = Firebase.getFloat("settings/adrean/1/cutoff");
+  float cutoff = Firebase.getFloat("settings/cutoff");
   Serial.print("cutoff=");
   Serial.println(cutoff);
   digitalWrite(RELAY, temperature >= cutoff);
@@ -67,8 +67,6 @@ void loop() {
     JsonObject& tempData = jsonBuffer.createObject();
     tempData["temperature"] = temperature;
     tempData["timestamp"] = timeStampObject;
-    tempData["user"] = "adrean";
-    tempData["board"] = "1";
     Firebase.push("secondary", tempData);
     Serial.print("pushed=");
     Serial.println(Firebase.success());
