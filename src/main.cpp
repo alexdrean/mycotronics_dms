@@ -26,7 +26,7 @@ long lastTempUpdate = -86400000;
 void setup() {
   Serial.begin(9600);
   pinMode(RELAY, OUTPUT);
-  digitalWrite(RELAY, 0);
+  digitalWrite(RELAY, 1);
   // connect to wifi.
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.println("connecting");
