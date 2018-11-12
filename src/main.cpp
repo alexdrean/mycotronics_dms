@@ -45,6 +45,19 @@ float getTemperature() {
     return DS18B20.getTempCByIndex(0);
 }
 
+bool notifyHuman() {
+    HTTPClient http;
+    String s;
+    s += "http://api.thingspeak.com/apps/thinghttp/send_request?api_key=9CW5RPMXQWCMMCL2&number=";
+    s += Firebase.getString("settings/phone");
+    s+= "&message=Alert!";
+    Serial.println(s);
+    Serial.println(http.begin(s));
+    int code = http.GET();
+    Serial.println(code);
+    return code >= 200 && code < 300;
+}
+
 DynamicJsonBuffer jsonBuffer;
 
 void loop() {
@@ -57,7 +70,12 @@ void loop() {
   float cutoff = Firebase.getFloat("settings/cutoff");
   Serial.print("cutoff=");
   Serial.println(cutoff);
-  digitalWrite(RELAY, temperature >= cutoff);
+  static bool isAlert = false;
+  bool res = temperature >= cutoff;
+  digitalWrite(RELAY, res);
+  if (res && !isAlert)
+    if (notifyHuman())
+        isAlert = res;
   long mil = millis();
   if (mil - lastTempUpdate >  interval * 1000L) {
     lastTempUpdate = mil;
